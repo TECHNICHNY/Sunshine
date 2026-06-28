@@ -23,6 +23,7 @@
 #include "main.h"
 #include "nvhttp.h"
 #include "process.h"
+#include "qdee_stats.h"
 #include "system_tray.h"
 #include "upnp.h"
 #include "video.h"
@@ -217,6 +218,7 @@ int main(int argc, char *argv[]) {
   // if anything is logged prior to this point, it will appear in stdout, but not in the log viewer in the UI
   // the version should be printed to the log before anything else
   BOOST_LOG(info) << PROJECT_NAME << " version: " << PROJECT_VERSION << " commit: " << PROJECT_VERSION_COMMIT;
+  BOOST_LOG(info) << "QDEE Host (Quantum Display Engine Extension) — Grejem industries fork";
 
   // Log publisher metadata
   log_publisher_data();
@@ -442,6 +444,10 @@ int main(int argc, char *argv[]) {
   std::thread configThread {confighttp::start};
   std::thread rtspThread {rtsp_stream::start};
 
+  // QDEE S3: start the stats broadcasting thread so qdee.exe wrapper can read
+  // telemetry from <appdata>/qdee-stats-<port_offset>.json every 500 ms.
+  qdee_stats::start();
+
 #ifdef _WIN32
   // If we're using the default port and GameStream is enabled, warn the user
   if (config::sunshine.port == 47989 && is_gamestream_enabled()) {
@@ -469,6 +475,9 @@ int main(int argc, char *argv[]) {
   httpThread.join();
   configThread.join();
   rtspThread.join();
+
+  // QDEE S3: stop stats broadcasting and clean up the JSON file.
+  qdee_stats::stop();
 
   task_pool.stop();
   task_pool.join();

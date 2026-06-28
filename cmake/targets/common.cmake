@@ -6,6 +6,12 @@ if(APPLE AND NOT SUNSHINE_BUILD_HOMEBREW)
 else()
     add_executable(sunshine ${SUNSHINE_TARGET_FILES})
 endif()
+
+# QDEE S2: rename output binary sunshine -> qdee-sunshine so the qdee.exe
+# Rust wrapper can locate it. The CMake target name stays "sunshine" to keep
+# upstream merge conflicts minimal; only the output filename changes.
+set_target_properties(sunshine PROPERTIES OUTPUT_NAME "qdee-sunshine")
+
 foreach(dep ${SUNSHINE_TARGET_DEPENDENCIES})
     add_dependencies(sunshine ${dep})  # compile these before sunshine
 endforeach()
