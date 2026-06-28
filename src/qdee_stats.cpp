@@ -19,8 +19,8 @@
 
 // local includes
 #include "config.h"
+#include "platform/common.h"
 #include "qdee_stats.h"
-#include "src/platform/common.h"
 
 namespace fs = std::filesystem;
 using namespace std::literals;

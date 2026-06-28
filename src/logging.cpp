@@ -267,6 +267,12 @@ namespace logging {
       << "    --creds username password | set user credentials for the Web manager"sv << std::endl
       << "    --version                 | print the version of sunshine"sv << std::endl
       << std::endl
+      << "    QDEE (Quantum Display Engine Extension) options"sv << std::endl
+      << "        --port-offset N       | Add N to all derived ports for multi-instance"sv << std::endl
+      << "                           | isolation (wrapper qdee.exe uses N*16 per instance)"sv << std::endl
+      << "        --hub-managed         | Mark this instance as orchestrated by the qdee.exe"sv << std::endl
+      << "                           | Rust wrapper (Grejem Hub ecosystem)"sv << std::endl
+      << std::endl
       << "    flags"sv << std::endl
       << "        -0 | Read PIN from stdin"sv << std::endl
       << "        -1 | Do not load previously saved state and do retain any state after shutdown"sv << std::endl

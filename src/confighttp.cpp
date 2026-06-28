@@ -154,7 +154,7 @@ namespace confighttp {
 
     const SimpleWeb::CaseInsensitiveMultimap headers {
       {"Content-Type", "application/json"},
-      {"WWW-Authenticate", R"(Basic realm="Sunshine Gamestream Host", charset="UTF-8")"},
+      {"WWW-Authenticate", R"(Basic realm="QDEE Gamestream Host", charset="UTF-8")"},
       {"X-Frame-Options", "DENY"},
       {"Content-Security-Policy", "frame-ancestors 'none';"}
     };
