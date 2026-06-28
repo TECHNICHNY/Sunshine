@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 3.20)
 # todo - set this conditionally
 
 project(Sunshine VERSION 0.0.0
-        DESCRIPTION "Self-hosted game stream host for Moonlight"
-        HOMEPAGE_URL "https://app.lizardbyte.dev/Sunshine")
+        DESCRIPTION "QDEE Host — Quantum Display Engine Extension (fork of Sunshine)"
+        HOMEPAGE_URL "https://github.com/TECHNICHNY/grejem-QuantumDisplayEngineExtension")
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

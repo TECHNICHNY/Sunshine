@@ -445,7 +445,10 @@ TEST_F(ConfigConsistencyTest, AllConfigOptionsExistInAllFiles) {
 
   // Options that are internal/special and shouldn't be in UI/docs
   const std::set<std::string, std::less<>> internalOptions = {
-    "flags"  // Internal config flags, not user-configurable
+    "flags",  // Internal config flags, not user-configurable
+    // QDEE: wrapper-managed options, set via CLI by qdee.exe, not exposed in Web UI
+    "port_offset",  // Multi-instance port isolation (S1)
+    "hub_managed"  // Wrapper orchestration marker (S4)
   };
 
   std::vector<std::string> missingFromFiles;

@@ -259,6 +259,6 @@ namespace net {
       }
     }
 
-    return !instancename.empty() ? instancename : "Sunshine";
+    return !instancename.empty() ? instancename : "QDEE Host";
   }
 }  // namespace net
