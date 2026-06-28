@@ -782,11 +782,13 @@ namespace config {
     platf::appdata().string() + "/sunshine.conf",  // config file
     {},  // cmd args
     47989,  // Base port number
+    0,  // QDEE: port_offset (multi-instance isolation)
     "ipv4",  // Address family
     {},  // Bind address
     platf::appdata().string() + "/sunshine.log",  // log file
     false,  // notify_pre_releases
     true,  // system_tray
+    false,  // QDEE: hub_managed (set by qdee.exe wrapper)
     {},  // prep commands
   };
 
@@ -1703,10 +1705,18 @@ namespace config {
 
     bool_f(vars, "notify_pre_releases", sunshine.notify_pre_releases);
     bool_f(vars, "system_tray", sunshine.system_tray);
+    bool_f(vars, "hub_managed", sunshine.hub_managed);
 
     int port = sunshine.port;
     int_between_f(vars, "port"s, port, {1024 + nvhttp::PORT_HTTPS, 65535 - rtsp_stream::RTSP_SETUP_PORT});
     sunshine.port = (std::uint16_t) port;
+
+    // QDEE S1: port_offset — additional offset for multi-instance isolation.
+    // All ports derived via net::map_port() become (port + derived_offset + port_offset).
+    // Wrapper qdee.exe spawns N instances with port_offset = N*16 to avoid collisions.
+    int port_offset = sunshine.port_offset;
+    int_between_f(vars, "port_offset"s, port_offset, {0, 65535 - 1024});
+    sunshine.port_offset = port_offset;
 
     // Now that we have the port, add web UI port-specific origins to CSRF allowed list
     // Web UI runs on port + 1 (PORT_HTTPS offset is 1 for confighttp)
@@ -1815,6 +1825,21 @@ namespace config {
         service_admin_launch = true;
       }
 #endif
+      // QDEE S1: --port-offset N — add N to all derived ports (multi-instance isolation)
+      else if (line == "--port-offset"sv) {
+        if (x + 1 >= argc) {
+          BOOST_LOG(fatal) << "--port-offset requires an integer value"sv;
+          logging::print_help(*argv);
+          return -1;
+        }
+        sunshine.port_offset = std::atoi(argv[++x]);
+        cmd_vars.emplace("port_offset"s, std::to_string(sunshine.port_offset));
+      }
+      // QDEE S4: --hub-managed — mark this instance as orchestrated by qdee.exe wrapper
+      else if (line == "--hub-managed"sv) {
+        sunshine.hub_managed = true;
+        cmd_vars.emplace("hub_managed"s, "true"s);
+      }
       else if (*line == '-') {
         if (*(line + 1) == '-') {
           sunshine.cmd.name = line + 2;

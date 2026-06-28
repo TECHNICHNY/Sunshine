@@ -359,12 +359,14 @@ namespace config {
     } cmd;  ///< Command line used to launch the application.
 
     std::uint16_t port;  ///< TCP port used by Sunshine services.
+    int port_offset;  ///< QDEE: additional offset added to all derived ports for multi-instance isolation.
     std::string address_family;  ///< Address family requested for listening sockets.
     std::string bind_address;  ///< Local address Sunshine should bind to.
 
     std::string log_file;  ///< Path to the configured log file.
     bool notify_pre_releases;  ///< Notify users about pre-release updates.
     bool system_tray;  ///< Enable the system tray integration.
+    bool hub_managed;  ///< QDEE: when true, Sunshine is orchestrated by qdee.exe wrapper (disables self-management features).
     std::vector<prep_cmd_t> prep_cmds;  ///< Preparation commands executed around application launch.
 
     // List of allowed origins for CSRF protection (e.g., "https://example.com,https://app.example.com")
